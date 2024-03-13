@@ -1,4 +1,4 @@
-Raffle contracts written by Foundry
+Lottery contracts written by Foundry
 
 @OwenChan
 
