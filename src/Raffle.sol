@@ -44,6 +44,7 @@ contract Raffle is VRFConsumerBaseV2 {
     RaffleState private s_raffleState; // 新建一个枚举变量
 
     /** Events */
+    event RequestedRaffleWinner(uint256 indexed requestId);
     event EnteredRaffle(address indexed player);
     event PickedWinner(address indexed winner);
 
@@ -111,13 +112,15 @@ contract Raffle is VRFConsumerBaseV2 {
         }
         s_raffleState = RaffleState.CALCULATING;
         // 调用请求随机数的函数后会返回一个请求ID（不是订阅ID）
-        i_vrfCoordinator.requestRandomWords(
+        uint256 requestId = i_vrfCoordinator.requestRandomWords(
             i_gasLane, // 使用哪种服务，高速-中速-低速，Gas费不一样
             i_subscriptionId, // 我们的订阅ID
             REQUEST_CONFIRMATIONS, // 获取随机数所需要的区块确认数量
             i_callbackGasLimit, // 返回随机数的Gas限制
             NUM_WORDS // 请求几个随机数
         );
+
+        emit RequestedRaffleWinner(requestId);
     }
 
     // 这里的逻辑是：
